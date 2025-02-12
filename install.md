@@ -5,7 +5,7 @@
 ### 프로젝트 생성
 > [vite](https://ko.vite.dev/guide/), [react](https://ko.react.dev/), [react legacy](https://ko.legacy.reactjs.org/docs/getting-started.html)
 ```bash
-npx create vite
+npm create vite@latest
 
 # 선택메뉴
 # - project name: frontend
