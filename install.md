@@ -32,9 +32,9 @@ vite 설정
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
-  # path 지원
+  // path 지원
   plugins: [react(), tsconfigPaths()],
-  # `@` 절대경로 변경
+  // `@` 절대경로 변경
   resolve: {
     alias: {
       find: '@',
@@ -46,7 +46,7 @@ export default defineConfig({
 
 vscode 자동완성 설정
 ```ts
-# vite.config.ts
+# tsconfig.app.json
 {
   "compilerOptions": {
     /* 절대경로 설정 */
