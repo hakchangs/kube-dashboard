@@ -151,12 +151,53 @@ export default defineConfig({
 })
 ```
 
-
-## ToDo
-
-api 연계 구조
+### api 연계 구조
 - 선/후처리 유틸화
 - target 서비스 분리 및 공통처리. 인증, 비인증서비스 분리
 - 리소스별 URI, 요청/응답 타입관리.
 - react query, SWR 사용검토//필요시 사용검토
+
+## backend
+
+### sqlite 설정
+> https://github.com/xerial/sqlite-jdbc
+
+라이브러리 추가
+```
+# build.gradle
+dependencies {
+  # jdbc driver
+  implementation 'org.xerial:sqlite-jdbc:3.49.0.0'
+  # dialect
+  implementation 'org.hibernate.orm:hibernate-community-dialects'
+}
+```
+
+접속설정
+```yaml
+# application.yaml
+spring:
+  datasource:
+    driver-class-name: org.sqlite.JDBC
+    url: jdbc:sqlite:backend.db
+    username: admin
+    password: admin
+```
+
+### springdoc (Swagger/OpenAPI)
+> [springdoc](https://springdoc.org/)
+
+라이브러리 추가
+```
+# build.gradle
+dependencies {
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.4'
+}
+```
+
+UI 접속확인
+- http://localhost:8080/swagger-ui/index.html
+
+
+
 
