@@ -19,7 +19,7 @@ public class AccountSearchService {
     public List<AccountSearchResult> searchAll() {
         List<AccountEntity> found = accountService.searchAll();
         return found.stream().map(entity -> new AccountSearchResult(
-                entity.getUsername(), entity.getCreated(), entity.getModified()
+                entity.getUsername(), entity.getCreatedAt(), entity.getModifiedAt()
         )).toList();
     }
 }

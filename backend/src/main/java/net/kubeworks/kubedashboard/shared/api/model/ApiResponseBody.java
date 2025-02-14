@@ -10,8 +10,12 @@ public record ApiResponseBody<T>(
         T data
 ) {
 
+    public static <T> ApiResponseBody<T> success(T data, String message) {
+        return new ApiResponseBody<>(SuccessCode.SUCCESS, message, data);
+    }
+
     public static <T> ApiResponseBody<T> success(T data) {
-        return new ApiResponseBody<>(SuccessCode.SUCCESS, null, data);
+        return success(data, null);
     }
 
     public static <T> ApiResponseBody<T> fail(BusinessException e) {

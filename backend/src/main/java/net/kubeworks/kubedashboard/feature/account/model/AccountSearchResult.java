@@ -1,10 +1,10 @@
 package net.kubeworks.kubedashboard.feature.account.model;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 public record AccountSearchResult(
         String username,
-        LocalDateTime createdAt,
-        LocalDateTime modifiedAt
+        ZonedDateTime createdAt,
+        ZonedDateTime modifiedAt
 ) {
 }

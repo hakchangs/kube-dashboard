@@ -1,31 +1,52 @@
 package net.kubeworks.kubedashboard.domain.account.model;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Entity
 @Table(name = "account")
-@Getter @Setter
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AccountEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
 
-    @Column(unique = true, nullable = false, length = 50)
-    private String username;
+    @Column(nullable = false, length = 36, unique = true)
+    String uid;
+    @Column(nullable = false, length = 100, unique = true)
+    String username;
     @Column(nullable = false, length = 100)
-    private String password;
-
-    @Column
-    private boolean enabled;
+    String password;
 
     @Column(nullable = false)
-    private LocalDateTime created;
+    boolean enabled;
 
     @Column
-    private LocalDateTime modified;
+    ZonedDateTime lastLoginedAt;
+
+    @Column(nullable = false)
+    ZonedDateTime createdAt;
+
+    @Column(nullable = false)
+    ZonedDateTime modifiedAt;
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.modifiedAt = ZonedDateTime.now();
+    }
+
+    public void changePassword(String password) {
+        this.password = password;
+    }
+
+    public void changeLastLoginedAt(ZonedDateTime lastLoginedAt) {
+        this.lastLoginedAt = lastLoginedAt;
+    }
 
 }

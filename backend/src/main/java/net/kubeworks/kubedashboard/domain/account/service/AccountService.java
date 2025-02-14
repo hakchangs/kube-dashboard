@@ -1,12 +1,15 @@
 package net.kubeworks.kubedashboard.domain.account.service;
 
 import net.kubeworks.kubedashboard.domain.account.model.AccountEntity;
+import net.kubeworks.kubedashboard.domain.account.model.AccountErrorCode;
 import net.kubeworks.kubedashboard.domain.account.model.AddAccount;
 import net.kubeworks.kubedashboard.domain.account.repository.AccountRepository;
+import net.kubeworks.kubedashboard.shared.exception.model.BusinessException;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AccountService {
@@ -17,19 +20,28 @@ public class AccountService {
         this.accountRepository = accountRepository;
     }
 
-    public AccountEntity add(AddAccount addAccount) {
+    public AccountEntity add(AddAccount form) {
+        if (!isUsernameAvailable(form.username())) {
+            throw new BusinessException(AccountErrorCode.DUPLICATE_USERNAME ,"duplicate username");
+        }
+        return accountRepository.save(form.toEntity());
+    }
 
-        AccountEntity newEntity = new AccountEntity();
-        newEntity.setUsername(addAccount.username());
-        newEntity.setPassword(addAccount.password());
-        newEntity.setCreated(LocalDateTime.now());
-        newEntity.setModified(LocalDateTime.now());
-
-        return accountRepository.save(newEntity);
+    public Optional<AccountEntity> findByUsername(String username) {
+        return accountRepository.findByUsername(username);
     }
 
     public List<AccountEntity> searchAll() {
         return accountRepository.findAll();
+    }
+
+    public boolean isUsernameAvailable(String username) {
+        return !accountRepository.existsByUsername(username);
+    }
+
+    public void markLogin(AccountEntity account) {
+        account.changeLastLoginedAt(ZonedDateTime.now());
+        accountRepository.save(account);
     }
 
 }

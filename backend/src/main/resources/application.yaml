@@ -16,3 +16,14 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        show_sql: true
+
+springdoc:
+  swagger-ui:
+    with-credentials: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

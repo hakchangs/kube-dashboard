@@ -4,5 +4,6 @@ public enum ResultType {
 
     SUCCESS,
     ILLEGAL_ARGUMENT,
+    INTERNAL_SERVER_ERROR,
 
 }
