@@ -5,13 +5,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.SchemaProperty;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import net.kubeworks.kubedashboard.feature.auth.model.*;
 import net.kubeworks.kubedashboard.feature.auth.service.SignUpService;
 import net.kubeworks.kubedashboard.feature.auth.service.JwtService;
 import net.kubeworks.kubedashboard.feature.auth.service.PasswordLoginService;
 import net.kubeworks.kubedashboard.shared.api.model.ApiResponseBody;
+import org.springframework.http.ResponseCookie;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,24 +50,30 @@ public class AuthController {
         LoginResult result = passwordLoginService.login(form);
         long expirationSeconds = result.expiresIn();
 
-        Cookie cookie = new Cookie(JwtService.NAME, result.accessToken());
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
-        cookie.setPath("/");
-        cookie.setMaxAge((int) expirationSeconds);
-        response.addCookie(cookie);
+        ResponseCookie cookie = ResponseCookie.from(JwtService.NAME, result.accessToken())
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(expirationSeconds)
+                .sameSite("None")
+                .build();
+        response.addHeader("Set-Cookie", cookie.toString());
 
         return ApiResponseBody.success(result);
     }
 
     @PostMapping("/logout")
     public ApiResponseBody<Void> logout(HttpServletResponse response) {
-        Cookie cookie = new Cookie(JwtService.NAME, "");
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
-        cookie.setPath("/");
-        cookie.setMaxAge(0); // 즉시 만료
-        response.addCookie(cookie);
+
+        ResponseCookie cookie = ResponseCookie.from(JwtService.NAME, "")
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(0) // 즉시 만료
+                .sameSite("None")
+                .build();
+        response.addHeader("Set-Cookie", cookie.toString());
+
         return ApiResponseBody.success(null, "logout success!");
     }
 
