@@ -1,11 +1,16 @@
-package net.kubeworks.kubedashboard.app.api.web;
+package net.kubeworks.kubedashboard.app.api.web.me;
 
-import net.kubeworks.kubedashboard.domain.account.model.AccountEntity;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import net.kubeworks.kubedashboard.domain.account.model.Account;
 import net.kubeworks.kubedashboard.domain.account.service.AccountService;
 import net.kubeworks.kubedashboard.feature.auth.model.AuthContext;
 import net.kubeworks.kubedashboard.feature.auth.model.AuthErrorCode;
 import net.kubeworks.kubedashboard.feature.auth.service.AuthContextService;
-import net.kubeworks.kubedashboard.shared.api.model.ApiResponseBody;
 import net.kubeworks.kubedashboard.shared.exception.model.BusinessException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,17 +29,24 @@ public class MeController {
     }
 
     @GetMapping("/me")
-    public ApiResponseBody<MeResponse> me() {
+    @Tag(name = "auth")
+    @Operation(summary = "내 정보")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "성공"),
+            @ApiResponse(responseCode = "403", description = "권한없음", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "500", description = "서버 내부 에러", content = @Content(schema = @Schema())),
+    })
+    public MeResponse me() {
 
         //TODO: SecurityContext 로드 어노테이션 추가 (ArgumentResolver, Annotation)
 
         AuthContext authContext = authContextService.loadAuthContext();
-        AccountEntity account = accountService.findByUsername(authContext.username())
+        Account account = accountService.findByUsername(authContext.username())
                 .orElseThrow(() -> new BusinessException(AuthErrorCode.NOT_EXISTS_ACCOUNT, "not found account"));
 
-        return ApiResponseBody.success(new MeResponse(
+        return new MeResponse(
                 account.getUid(), account.getUsername(), account.getCreatedAt(),
-                account.getModifiedAt(), account.getLastLoginedAt()));
+                account.getModifiedAt(), account.getLastLoginedAt());
     }
 
     public record MeResponse(

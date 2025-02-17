@@ -1,6 +1,6 @@
 package net.kubeworks.kubedashboard.feature.account.service;
 
-import net.kubeworks.kubedashboard.domain.account.model.AccountEntity;
+import net.kubeworks.kubedashboard.domain.account.model.Account;
 import net.kubeworks.kubedashboard.domain.account.service.AccountService;
 import net.kubeworks.kubedashboard.feature.account.model.AccountSearchResult;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ public class AccountSearchService {
     }
 
     public List<AccountSearchResult> searchAll() {
-        List<AccountEntity> found = accountService.searchAll();
+        List<Account> found = accountService.searchAll();
         return found.stream().map(entity -> new AccountSearchResult(
                 entity.getUsername(), entity.getCreatedAt(), entity.getModifiedAt()
         )).toList();

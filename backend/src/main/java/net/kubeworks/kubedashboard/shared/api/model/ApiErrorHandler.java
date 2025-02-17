@@ -1,8 +1,8 @@
 package net.kubeworks.kubedashboard.shared.api.model;
 
 import net.kubeworks.kubedashboard.shared.exception.model.BusinessException;
-import net.kubeworks.kubedashboard.shared.exception.model.ResultType;
-import net.kubeworks.kubedashboard.shared.exception.model.ResultCode;
+import net.kubeworks.kubedashboard.shared.exception.model.ErrorType;
+import net.kubeworks.kubedashboard.shared.exception.model.ErrorCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -11,12 +11,20 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ApiErrorHandler {
 
     @ExceptionHandler(BusinessException.class)
-    public ResponseEntity<ApiResponseBody<?>> handleBusinessException(BusinessException e) {
+    public ResponseEntity<ApiErrorResponse<?>> handleBusinessException(BusinessException e) {
 
-        ResultCode code = e.getCode();
+        ErrorCode code = e.getCode();
 
-        if (ResultType.ILLEGAL_ARGUMENT == code.getType()) {
-            return ResponseEntity.badRequest().body(ApiResponseBody.fail(e));
+        if (ErrorType.ILLEGAL_ARGUMENT == code.getType()) {
+            return ResponseEntity.badRequest().body(ApiErrorResponse.from(e));
+        }
+
+        if (ErrorType.NOT_FOUND == code.getType()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        if (ErrorType.INTERNAL_SERVER_ERROR == code.getType()) {
+            return ResponseEntity.status(500).body(ApiErrorResponse.from(e));
         }
 
         return ResponseEntity.internalServerError().build();

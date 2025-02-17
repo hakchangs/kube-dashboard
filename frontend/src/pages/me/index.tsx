@@ -10,7 +10,7 @@ const MePage = () => {
 
   useEffect(() => {
     if (!token) {
-      navigate("/auth/login")
+      navigate("/login")
       return
     }
     fetchMe()

@@ -10,7 +10,7 @@ type MeResponse = {
 
 export const meApi = {
   me: async (): Promise<MeResponse> => {
-    const body = await http<ApiResponseBody<MeResponse>>("/me", { method: "GET" })
-    return body.data
+    const body = await http<MeResponse>("/me", { method: "GET" })
+    return body
   },
 }

@@ -18,4 +18,7 @@ import net.kubeworks.kubedashboard.feature.auth.service.JwtService;
         @SecurityScheme(name = "cookieAuth", type = SecuritySchemeType.APIKEY, in = SecuritySchemeIn.COOKIE, paramName = JwtService.NAME),
 })
 public class SwaggerConfig {
+
+    //Swagger 속성: https://springdoc.org/properties.html
+
 }

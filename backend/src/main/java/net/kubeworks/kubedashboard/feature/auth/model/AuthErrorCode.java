@@ -1,25 +1,25 @@
 package net.kubeworks.kubedashboard.feature.auth.model;
 
-import net.kubeworks.kubedashboard.shared.exception.model.ResultCode;
-import net.kubeworks.kubedashboard.shared.exception.model.ResultType;
+import net.kubeworks.kubedashboard.shared.exception.model.ErrorCode;
+import net.kubeworks.kubedashboard.shared.exception.model.ErrorType;
 
-public enum AuthErrorCode implements ResultCode {
+public enum AuthErrorCode implements ErrorCode {
 
-    EMPTY_USERNAME(ResultType.ILLEGAL_ARGUMENT, "Empty username"),
-    EMPTY_PASSWORD(ResultType.ILLEGAL_ARGUMENT, "Empty password"),
-    NOT_EXISTS_ACCOUNT(ResultType.ILLEGAL_ARGUMENT, "not exists account"),
-    INCORRECT_PASSWORD(ResultType.ILLEGAL_ARGUMENT, "incorrect password"),
-    SIGN_FAILED(ResultType.INTERNAL_SERVER_ERROR, "E0001"),
-    VERIFY_FAILED(ResultType.INTERNAL_SERVER_ERROR, "E0002"),
-    PARSE_FAILED(ResultType.INTERNAL_SERVER_ERROR, "E0003"),
+    EMPTY_USERNAME(ErrorType.ILLEGAL_ARGUMENT),
+    EMPTY_PASSWORD(ErrorType.ILLEGAL_ARGUMENT),
+    NOT_EXISTS_ACCOUNT(ErrorType.ILLEGAL_ARGUMENT),
+    INCORRECT_PASSWORD(ErrorType.ILLEGAL_ARGUMENT),
+    SIGN_FAILED(ErrorType.INTERNAL_SERVER_ERROR),
+    VERIFY_FAILED(ErrorType.INTERNAL_SERVER_ERROR),
+    PARSE_FAILED(ErrorType.INTERNAL_SERVER_ERROR),
     ;
 
-    private final ResultType type;
+    private final ErrorType type;
     private final String code;
 
-    AuthErrorCode(ResultType type, String code) {
+    AuthErrorCode(ErrorType type) {
         this.type = type;
-        this.code = code;
+        this.code = "AUTH_" + name();
     }
 
     @Override
@@ -28,7 +28,7 @@ public enum AuthErrorCode implements ResultCode {
     }
 
     @Override
-    public ResultType getType() {
+    public ErrorType getType() {
         return type;
     }
 

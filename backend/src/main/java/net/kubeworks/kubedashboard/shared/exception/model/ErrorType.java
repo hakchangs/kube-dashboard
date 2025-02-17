@@ -1,9 +1,9 @@
 package net.kubeworks.kubedashboard.shared.exception.model;
 
-public enum ResultType {
+public enum ErrorType {
 
-    SUCCESS,
     ILLEGAL_ARGUMENT,
+    NOT_FOUND,
     INTERNAL_SERVER_ERROR,
 
 }
