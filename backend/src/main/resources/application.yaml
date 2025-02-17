@@ -27,3 +27,9 @@ management:
     web:
       exposure:
         include: "*"
+
+logging:
+  level:
+    io.kubernetes.client: trace
+    okhttp3:
+      OkHttpClient: trace

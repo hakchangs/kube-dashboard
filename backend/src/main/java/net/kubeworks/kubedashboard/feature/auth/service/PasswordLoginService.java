@@ -1,6 +1,6 @@
 package net.kubeworks.kubedashboard.feature.auth.service;
 
-import net.kubeworks.kubedashboard.domain.account.model.AccountEntity;
+import net.kubeworks.kubedashboard.domain.account.model.Account;
 import net.kubeworks.kubedashboard.domain.account.service.AccountService;
 import net.kubeworks.kubedashboard.feature.auth.model.JwtGenerationForm;
 import net.kubeworks.kubedashboard.feature.auth.model.AuthErrorCode;
@@ -27,16 +27,25 @@ public class PasswordLoginService {
         this.accountService = accountService;
     }
 
+    /**
+     * @ErrorCode
+     * <pre>
+     * ACCOUNT_EMPTY_USERNAME
+     * ACCOUNT_EMPTY_PASSWORD
+     * ACCOUNT_NOT_EXISTS_ACCOUNT
+     * ACCOUNT_INCORRECT_PASSWORD
+     * </pre>
+     */
     public LoginResult login(PasswordLoginForm form) {
 
         // 계정 존재여부 확인
-        Optional<AccountEntity> found = accountService.findByUsername(form.username());
+        Optional<Account> found = accountService.findByUsername(form.username());
         if (found.isEmpty()) {
             throw new BusinessException(AuthErrorCode.NOT_EXISTS_ACCOUNT, "Account does not exist");
         }
 
         // 패스워드 검증
-        AccountEntity account = found.get();
+        Account account = found.get();
         if (!passwordEncoder.matches(form.password(), account.getPassword())) {
             throw new BusinessException(AuthErrorCode.INCORRECT_PASSWORD, "Incorrect password");
         }

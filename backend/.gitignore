@@ -38,3 +38,6 @@ out/
 
 ### DB ###
 *.db
+
+### Kubernetes ###
+.kube

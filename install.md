@@ -100,6 +100,21 @@ vscode 포매터 설정. (prettier 플러그인 연동)
 npx storybook@latest init
 ```
 
+#### 디자인 관리
+혼자 개발하므로 기능개발과 디자인을 분리해야 시간소모가 적을듯함.\
+git branch 를 기능(feature)과 디자인(design)으로 분리하여 진행
+
+> 디자인-기능 분리개발
+> 
+> 좋은 전략 같아! 기능 개발을 빠르게 진행하고, 디자인은 별도 브랜치에서 점진적으로 개선하면 개발 속도도 유지하면서 UI/UX도 다듬을 수 있을 거야.
+> 
+> 브랜치 전략을 좀 더 구체적으로 정하면 좋을 것 같은데:
+> 
+>     feature/* 브랜치에서 기능 개발
+>     design/* 브랜치에서 스타일링 작업
+>     main 또는 develop 브랜치에서 최종 병합
+
+
 ### style 관리
 - 후보: css module, styled components, scss, tailwind
 
@@ -120,6 +135,14 @@ utility 성격의 스타일이 필요하면 tailwind 조합 검토
 > [FSD](https://feature-sliced.design/)
 - 도메인 중심
 - shared > entities > feature > widgets > pages > app
+
+#### FSD 도입 방향
+처음부터 공통사용을 지나치게 고려하하면 시간소모가 많을듯함.\
+page, feature 를 우선순위로 구현하고 필요한 상황이 발생한 경우 entities, shared 로 분리&이동
+
+필요한 상황 > 리팩토링
+- 비슷한 기능이 반복 (재사용)
+
 
 ### 상태관리(Store)
 > [zustand](https://zustand.docs.pmnd.rs/getting-started/introduction)\
@@ -198,6 +221,47 @@ dependencies {
 UI 접속확인
 - http://localhost:8080/swagger-ui/index.html
 
+
+### kubernetes-client/java 설치
+> [kubernetes-client/java](https://github.com/kubernetes-client/java)
+
+라이브러리 추가
+```gradle
+implementation 'io.kubernetes:client-java:22.0.1'
+```
+
+kubeconfig 설정
+```shell
+# k8s 마스터 서버에서 kubeconfig 파일을 가져온다.
+scp <k8s-server>:/root/.kube/config <project-path>/.kube/config
+
+# kubeconfig 파일의 접속정보를 변경한다.
+vi <project-path>/.kube/config
+---
+clusters:
+- cluster:
+    server: <k8s 마스터 서버 접속 HOST>
+---
+
+# 개발환경에서 `KUBECONFIG` 환경변수를 설정해준다.
+export KUBECONFIG=<project-path>/.kube/config
+```
+
+### kube-apiserver proxy 만들기
+
+resource 유형 조회.
+```shell
+kubectl api-resources | grep tekton
+```
+- resource 이름, apiVersion, apiGroup, kind 확인
+
+kube-apiserver 로 정상호출하는지 확인
+```shell
+kubectl get --raw "/apis/{apiGroup}/{apiVersion}/namespaces/{namespace}/{resource}" | jq
+
+# tekton 사용시 예제
+kubectl get --raw "/apis/tekton.dev/v1/namespaces/build/pipelines" | jq
+```
 
 
 

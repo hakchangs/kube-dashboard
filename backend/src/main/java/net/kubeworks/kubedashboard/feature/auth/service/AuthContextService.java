@@ -1,7 +1,7 @@
 package net.kubeworks.kubedashboard.feature.auth.service;
 
 import lombok.extern.slf4j.Slf4j;
-import net.kubeworks.kubedashboard.domain.account.model.AccountEntity;
+import net.kubeworks.kubedashboard.domain.account.model.Account;
 import net.kubeworks.kubedashboard.domain.account.service.AccountService;
 import net.kubeworks.kubedashboard.feature.auth.model.AuthContext;
 import net.kubeworks.kubedashboard.feature.auth.model.JwtAuthentication;
@@ -38,11 +38,11 @@ public class AuthContextService {
         }
 
         String username = jwtService.extractSub(authentication.getToken());
-        Optional<AccountEntity> found = accountService.findByUsername(username);
+        Optional<Account> found = accountService.findByUsername(username);
         if (found.isEmpty()) {
             return new AuthContext(false, null, null, null, null);
         }
-        AccountEntity account = found.get();
+        Account account = found.get();
         AuthContext authContext = new AuthContext(true, account.getId(), account.getUid(), account.getUsername(), account.getLastLoginedAt());
         authentication.setAuthContext(authContext);
         return authContext;

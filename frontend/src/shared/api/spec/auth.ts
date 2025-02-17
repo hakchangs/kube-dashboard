@@ -12,14 +12,14 @@ interface LoginResponse {
 
 export const authApi = {
   login: async (request: LoginRequest): Promise<LoginResponse> => {
-    const body = await http<ApiResponseBody<LoginResponse>>("/auth/login", {
+    const body = await http<LoginResponse>("/auth/login", {
       method: "POST",
       body: JSON.stringify(request),
       headers: {
         "Content-Type": "application/json",
       },
     })
-    return body.data
+    return body
   },
   logout: async () => {
     http("/auth/logout", { method: "POST" })
